@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
 int main(int argc, char **argv) {
@@ -28,5 +29,11 @@ int main(int argc, char **argv) {
         std::cerr << "connection failed" << '\n';
         close(fd);
         return 1;
+    }
+    std::string string{"Hello\n"};
+
+    int bytes_sent = send(fd, string.data(), string.size(), 0);
+    while (bytes_sent < sizeof(*string.data()) * string.size()) {
+        bytes_sent += send(fd, string.data(), string.size(), 0);
     }
 }
