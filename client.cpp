@@ -4,6 +4,33 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+template <typename T> int send_data(int fd, const T *data, std::size_t count) {
+
+    std::size_t total_bytes = sizeof(T) * count;
+
+    std::size_t bytes_sent{};
+
+    while (bytes_sent < total_bytes) {
+
+        ssize_t result =
+            send(fd, (reinterpret_cast<const char *>(data) + bytes_sent),
+                 total_bytes - bytes_sent, 0);
+
+        if (result == -1) {
+            std::cerr << "sending failure" << '\n';
+            return -1;
+        }
+
+        if (result == 0) {
+            std::cerr << "the send did not complete" << '\n';
+            return -1;
+        }
+
+        bytes_sent += result;
+    }
+    return 0;
+}
+
 int main(int argc, char **argv) {
 
     int fd =
@@ -31,9 +58,5 @@ int main(int argc, char **argv) {
         return 1;
     }
     std::string string{"Hello\n"};
-
-    int bytes_sent = send(fd, string.data(), string.size(), 0);
-    while (bytes_sent < sizeof(*string.data()) * string.size()) {
-        bytes_sent += send(fd, string.data(), string.size(), 0);
-    }
+    send_data(fd, string.data(), string.size());
 }
