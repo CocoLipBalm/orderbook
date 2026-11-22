@@ -8,9 +8,8 @@ int main(int argc, char **argv) {
     int fd =
         socket(AF_INET, SOCK_STREAM, 0); // this combination will select tcp
 
-    std::cout << "only ip address and port number can be provided" << '\n';
     if (argc != 3) {
-        std::cerr << "only ip address can be provided" << '\n';
+        std::cerr << "only ip address and port number can be provided" << '\n';
         return 1;
     }
 
