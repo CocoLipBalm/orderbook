@@ -36,27 +36,29 @@ int main(int argc, char **argv) {
     int fd =
         socket(AF_INET, SOCK_STREAM, 0); // this combination will select tcp
 
-    if (argc != 3) {
+    if (argc != 3) { // accept a ip and a port number TODO add checks
         std::cerr << "only ip address and port number can be provided" << '\n';
         return 1;
     }
 
     struct sockaddr_in server{}; // tcp network api
 
-    if (inet_pton(AF_INET, argv[1], &server.sin_addr) < 1) {
+    if (inet_pton(AF_INET, argv[1], &server.sin_addr) <
+        1) { // convert ip to numeric
         std::cerr << "error converting from presentation to numeric ip" << '\n';
         return 1;
     }
 
-    server.sin_port = htons(atoi(argv[2]));
-    server.sin_family = AF_INET;
+    server.sin_port = htons(atoi(argv[2])); // add port number to the structure
+    server.sin_family = AF_INET;            // declare ipv4 to the structure
 
     if (connect(fd, reinterpret_cast<sockaddr *>(&server), sizeof(server)) ==
-        -1) {
+        -1) { // conect to the server
         std::cerr << "connection failed" << '\n';
         close(fd);
         return 1;
     }
+
     std::string string{"Hello\n"};
     send_data(fd, string.data(), string.size());
 }
