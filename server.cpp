@@ -27,13 +27,13 @@ int main() {
     }
 
     while (true) {
-
         int client_fd = accept(server_fd, nullptr, nullptr);
         if (client_fd < 0) {
-            std::cerr << "socket done\n";
+            std::perror("accept");
             break;
         }
         char buffer[1024];
+
         while (true) {
             ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer), 0);
 
