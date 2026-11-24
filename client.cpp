@@ -17,12 +17,12 @@ template <typename T> int send_data(int fd, const T *data, std::size_t count) {
                  total_bytes - bytes_sent, 0);
 
         if (result == -1) {
-            std::cerr << "sending failure" << '\n';
+            std::perror("send");
             return -1;
         }
 
         if (result == 0) {
-            std::cerr << "the send did not complete" << '\n';
+            std::perror("send");
             return -1;
         }
 
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
     if (inet_pton(AF_INET, argv[1], &server.sin_addr) <
         1) { // convert ip to numeric
-        std::cerr << "error converting from presentation to numeric ip" << '\n';
+        std::perror("inet_pton");
         return 1;
     }
 
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
 
     if (connect(fd, reinterpret_cast<sockaddr *>(&server), sizeof(server)) ==
         -1) { // conect to the server
-        std::cerr << "connection failed" << '\n';
+        std::perror("connect");
         close(fd);
         return 1;
     }

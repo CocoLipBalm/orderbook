@@ -23,14 +23,15 @@ int main() {
 
     int result_listen = listen(server_fd, BACKLOG);
     if (result_listen == -1) {
-        std::cerr << "listening failed" << '\n';
+        std::perror("listen");
+        return 1;
     }
 
     while (true) {
         int client_fd = accept(server_fd, nullptr, nullptr);
         if (client_fd < 0) {
             std::perror("accept");
-            break;
+            continue;
         }
         char buffer[1024];
 
@@ -46,7 +47,7 @@ int main() {
                 break;
             }
 
-            // Process the bytes you just received.
+            // Process the bytes just received.
             std::cout.write(buffer, bytes_read);
         }
         close(client_fd);
