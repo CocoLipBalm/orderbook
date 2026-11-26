@@ -39,7 +39,7 @@ int main() {
             ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer), 0);
 
             if (bytes_read == 0) {
-                break; // The client has finished sending.
+                break; // The client has finished sending
             }
 
             if (bytes_read < 0) {
@@ -48,8 +48,9 @@ int main() {
             }
 
             // Process the bytes just received.
-            std::cout.write(buffer, bytes_read);
+            // std::cout.write(buffer, bytes_read);
         }
+
         close(client_fd);
     }
 }
